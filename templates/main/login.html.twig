@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>TMS - Logowanie</title>
-    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 128 128'><text y='1.2em' font-size='96'>⚫️</text><text y='1.3em' x='0.2em' font-size='76' fill='#fff'>sf</text></svg>">
+    <link rel="icon" href="{{ asset('assets/img/logo.svg') }}" sizes="any" type="image/svg+xml">
     <link rel="stylesheet" href="{{ asset('assets/css/bootstrap.min.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/css/custom/login.css') }}">
 </head>
@@ -21,11 +21,9 @@
                     </i>
                 </div>
                 <h4 class="mb-4">Logowanie do systemu</h4>
-
                 {% if error %}
                     <div class="alert alert-danger">{{ error.messageKey|trans(error.messageData, 'security') }}</div>
                 {% endif %}
-
                 <form method="post" action="{{ path('app_login') }}">
                     <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
 
@@ -37,12 +35,6 @@
                         <input type="password" id="password" name="_password" class="form-control" placeholder="Hasło" required autocomplete="current-password">
                         <label for="password" class="form-label">Hasło</label>
                     </div>
-
-{#                    <div class="form-check mb-3">#}
-{#                        <input class="form-check-input" type="checkbox" name="_remember_me" id="remember_me">#}
-{#                        <label class="form-check-label" for="remember_me">Zapamiętaj mnie</label>#}
-{#                    </div>#}
-
                     <button type="submit" class="btn btn-primary w-100">
                         <i class="bi bi-box-arrow-in-right"></i> Zaloguj
                     </button>

@@ -190,7 +190,6 @@ class Reservation
     public function removeTransportOrder(TransportOrder $transportOrder): static
     {
         if ($this->transportOrders->removeElement($transportOrder)) {
-            // set the owning side to null (unless already changed)
             if ($transportOrder->getReservation() === $this) {
                 $transportOrder->setReservation(null);
             }

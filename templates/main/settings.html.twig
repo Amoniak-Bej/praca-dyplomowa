@@ -12,8 +12,6 @@
                 </div>
             </div>
             <div class="card-body p-3">
-
-                <!-- Informacje o koncie -->
                 <h5 class="fw-bold mb-3">Informacje o koncie</h5>
                 <table class="table table-bordered">
                     <tr>
@@ -39,7 +37,6 @@
                                 'ROLE_MANAGE_RESERVATIONS': 'Zarządzanie rezerwacjami',
                                 'ROLE_MANAGE_TRANSPORT_ORDERS': 'Zarządzanie zleceniami transportowymi'
                             } %}
-
                             <div class="d-flex flex-wrap" style="max-height: 100px; overflow-y: auto;">
                                 {% for role in user.roles %}
                                     <span class="badge bg-primary m-1">{{ role_names[role] ?? role }}</span>
@@ -48,29 +45,23 @@
                         </td>
                     </tr>
                 </table>
-
-                <!-- Zmień hasło -->
                 <h5 class="fw-bold mt-4">Zmień hasło</h5>
-
                 <div class="form-floating mb-3">
                     {{ form_widget(form.currentPassword, {'attr': {'class': 'form-control', 'placeholder': 'Aktualne hasło'}}) }}
                     {{ form_label(form.currentPassword) }}
                     {{ form_errors(form.currentPassword) }}
                 </div>
-
                 <div class="form-floating mb-3">
                     {{ form_widget(form.newPassword.first, {'attr': {'class': 'form-control', 'placeholder': 'Nowe hasło'}}) }}
                     {{ form_label(form.newPassword.first) }}
                     {{ form_errors(form.newPassword.first) }}
                 </div>
-
                 <div class="form-floating mb-3">
                     {{ form_widget(form.newPassword.second, {'attr': {'class': 'form-control', 'placeholder': 'Powtórz nowe hasło'}}) }}
                     {{ form_label(form.newPassword.second) }}
                     {{ form_errors(form.newPassword.second) }}
                 </div>
             </div>
-
             <div class="card-footer d-flex justify-content-end gap-2">
                 {{ form_widget(form.save, {'attr': {'class': 'btn btn-primary'}}) }}
                 <a href="{{ path('app_dashboard') }}" class="btn btn-secondary">Powrót</a>

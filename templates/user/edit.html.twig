@@ -147,7 +147,7 @@
             }
 
             dropdownInput.addEventListener("click", function () {
-                dropdownList.classList.toggle("show"); // Pokazuje/ukrywa listę
+                dropdownList.classList.toggle("show");
             });
 
             document.addEventListener("click", function (e) {
@@ -162,10 +162,10 @@
                     let option = hiddenSelect.querySelector(`option[value="${value}"]`);
 
                     if (option.selected) {
-                        option.selected = false; // Odkliknięcie opcji
+                        option.selected = false;
                         this.classList.remove("selected");
                     } else {
-                        option.selected = true; // Zaznaczenie opcji
+                        option.selected = true;
                         this.classList.add("selected");
                     }
 
