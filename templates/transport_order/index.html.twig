@@ -1,0 +1,144 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Lista zleceń transportowych{% endblock %}
+
+{% block body %}
+    <div class="d-flex justify-content-center align-items-center mt-4">
+        <div class="card shadow-sm border-0 rounded-lg w-75">
+            <div class="card-header bg-light text-center fw-bold p-3">
+                <div class="card-title">
+                    Lista zleceń transportowych
+                </div>
+            </div>
+            <div class="card-body">
+                <table id="ordersTable" class="table table-bordered table-striped table-hover border">
+                    <thead>
+                    <tr>
+                        <th>Numer zamówienia</th>
+                        <th>Status</th>
+                        <th>Załadunek</th>
+                        <th>Rozładunek</th>
+                        <th>Rodzaj ładunku</th>
+                        <th>Cena</th>
+                        <th>Firma</th>
+                        <th>Edycja</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for order in orders %}
+                        <tr>
+                            <td>{{ order.orderNumber }}</td>
+                            <td>{{ order.status.label }}</td>
+                            <td>{{ order.fromCity }}, {{ order.fromCountry }} <br> {{ order.loadingDateTime ? order.loadingDateTime|date('Y-m-d H:i') : 'Brak' }}</td>
+                            <td>{{ order.toCity }}, {{ order.toCountry }} <br> {{ order.unloadingDateTime ? order.unloadingDateTime|date('Y-m-d H:i') : 'Brak' }}</td>
+                            <td>{{ order.loadType.label }}</td>
+                            <td>{{ order.price|number_format(2, ',', ' ') }} {{ order.currency.label }}</td>
+                            <td>{{ order.companyName }}</td>
+                            <td class="d-flex">
+                                <a href="{{ path('app_transport_order_edit', {id: order.id}) }}"
+                                   class="btn btn-sm btn-outline-primary d-flex align-items-center justify-content-center p-1 m-1">
+                                    <i class="bi bi-pencil-square fs-5"></i>
+                                </a>
+                                <button type="button"
+                                        class="btn btn-sm btn-outline-danger d-flex align-items-center justify-content-center p-1 m-1 delete-order"
+                                        data-order-id="{{ order.id }}">
+                                    <i class="bi bi-trash fs-5"></i>
+                                </button>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                    <tfoot>
+                    <tr>
+                        <th>Numer zamówienia</th>
+                        <th>Status</th>
+                        <th>Załadunek</th>
+                        <th>Rozładunek</th>
+                        <th>Rodzaj ładunku</th>
+                        <th>Cena</th>
+                        <th>Firma</th>
+                        <th>Edycja</th>
+                    </tr>
+                    </tfoot>
+                </table>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block javascripts %}
+    <script>
+        $(document).ready(function() {
+            $('#ordersTable').DataTable({
+                "language": {
+                    "lengthMenu": "Pokaż _MENU_ wpisów",
+                    "zeroRecords": "Brak wyników",
+                    "info": "Strona _PAGE_ z _PAGES_",
+                    "infoEmpty": "Brak dostępnych zleceń",
+                    "infoFiltered": "(filtrowane z _MAX_ rekordów)",
+                    "search": "Szukaj:",
+                    "paginate": {
+                        "first": "Pierwsza",
+                        "last": "Ostatnia",
+                        "next": "Następna",
+                        "previous": "Poprzednia"
+                    }
+                },
+                "pageLength": 10,
+                "responsive": true,
+                "autoWidth": false,
+                "dom": "<'dt--top-section'<'row'<'col-12 col-sm-6 d-flex justify-content-sm-start justify-content-center'l><'col-12 col-sm-6 d-flex justify-content-sm-end justify-content-center mt-sm-0 mt-3'f>>>" +
+                    "<'table-responsive'tr>" +
+                    "<'dt--bottom-section d-sm-flex justify-content-sm-between text-center'<'dt--pages-count mb-sm-0 mb-3'i><'dt--pagination'p>>"
+            });
+
+            $(".delete-order").on("click", function () {
+                let orderId = $(this).data("order-id");
+                let _url = '{{ path('app_transport_order_delete', {id: -99}) }}'.replace('-99', orderId);
+
+                Swal.fire({
+                    title: "Czy na pewno chcesz usunąć to zlecenie?",
+                    text: "Tej operacji nie można cofnąć!",
+                    icon: "warning",
+                    showCancelButton: true,
+                    confirmButtonColor: "#d33",
+                    cancelButtonColor: "#3085d6",
+                    confirmButtonText: "Tak, usuń!",
+                    cancelButtonText: "Anuluj",
+                    reverseButtons: true
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        $.ajax({
+                            url: _url,
+                            type: "DELETE",
+                            headers: {
+                                "X-Requested-With": "XMLHttpRequest",
+                                "Content-Type": "application/json"
+                            },
+                            success: function (response) {
+                                Swal.fire({
+                                    title: "Usunięto!",
+                                    text: "Zlecenie zostało pomyślnie usunięte.",
+                                    icon: "success",
+                                    confirmButtonText: "OK"
+                                }).then(() => {
+                                    location.reload();
+                                });
+                            },
+                            error: function (xhr) {
+                                Swal.fire({
+                                    title: "Błąd!",
+                                    text: "Wystąpił problem podczas usuwania zlecenia.",
+                                    icon: "error",
+                                    confirmButtonText: "OK"
+                                });
+                                console.error(xhr.responseText);
+                            }
+                        });
+                    }
+                });
+            });
+
+        });
+    </script>
+{% endblock %}

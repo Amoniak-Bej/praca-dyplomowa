@@ -1,0 +1,85 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Lista użytkowników{% endblock %}
+
+{% block body %}
+    <div class="d-flex justify-content-center align-items-center mt-4">
+        <div class="card shadow-sm border-0 rounded-lg w-75">
+            <div class="card-header bg-light text-center fw-bold p-3">
+                <div class="card-title">
+                    Lista użytkowników
+                </div>
+            </div>
+            <div class="card-body">
+                <table id="usersTable" class="table table-bordered table-striped table-hover border">
+                    <thead>
+                    <tr>
+                        <th>Nazwa użytkownika</th>
+                        <th>Imię</th>
+                        <th>Nazwisko</th>
+                        <th>E-mail</th>
+                        <th>Role</th>
+                        <th>Edycja</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for user in users %}
+                        <tr>
+                            <td>{{ user.username }}</td>
+                            <td>{{ user.name }}</td>
+                            <td>{{ user.surname }}</td>
+                            <td>{{ user.email }}</td>
+                            <td>
+                                {% set roleNames = {
+                                    'ROLE_ADMIN': 'Administrator',
+                                    'ROLE_MANAGE_VEHICLES': 'Zarządzanie pojazdami',
+                                    'ROLE_MANAGE_DRIVERS': 'Zarządzanie kierowcami',
+                                    'ROLE_MANAGE_RESERVATIONS': 'Zarządzanie rezerwacjami',
+                                    'ROLE_MANAGE_TRANSPORT_ORDERS': 'Zarządzanie zleceniami transportowymi',
+                                    'ROLE_USER' : 'Użytkownik'
+                                } %}
+                                {{ user.roles|map(role => roleNames[role] ?? role)|join(', ') }}
+                            </td>
+                            <td class="d-flex">
+                                <a href="{{ path('app_user_edit', {id: user.id}) }}"
+                                   class="btn btn-sm btn-outline-primary d-flex align-items-center justify-content-center p-1 m-1">
+                                    <i class="bi bi-pencil-square fs-5"></i>
+                                </a>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block javascripts %}
+    <script>
+        $(document).ready(function () {
+            $('#usersTable').DataTable({
+                "language": {
+                    "lengthMenu": "Pokaż _MENU_ wpisów",
+                    "zeroRecords": "Brak wyników",
+                    "info": "Strona _PAGE_ z _PAGES_",
+                    "infoEmpty": "Brak dostępnych użytkowników",
+                    "infoFiltered": "(filtrowane z _MAX_ rekordów)",
+                    "search": "Szukaj:",
+                    "paginate": {
+                        "first": "Pierwsza",
+                        "last": "Ostatnia",
+                        "next": "Następna",
+                        "previous": "Poprzednia"
+                    }
+                },
+                "pageLength": 10,
+                "responsive": true,
+                "autoWidth": false,
+                "dom": "<'dt--top-section'<'row'<'col-12 col-sm-6 d-flex justify-content-sm-start justify-content-center'l><'col-12 col-sm-6 d-flex justify-content-sm-end justify-content-center mt-sm-0 mt-3'f>>>" +
+                    "<'table-responsive'tr>" +
+                    "<'dt--bottom-section d-sm-flex justify-content-sm-between text-center'<'dt--pages-count mb-sm-0 mb-3'i><'dt--pagination'p>>"
+            });
+        });
+    </script>
+{% endblock %}

@@ -1,16 +1,250 @@
 <!DOCTYPE html>
 <html>
-    <head>
-        <meta charset="UTF-8">
-        <title>{% block title %}Welcome!{% endblock %}</title>
-        <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 128 128%22><text y=%221.2em%22 font-size=%2296%22>⚫️</text><text y=%221.3em%22 x=%220.2em%22 font-size=%2276%22 fill=%22%23fff%22>sf</text></svg>">
-        {% block stylesheets %}
-        {% endblock %}
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TMS - {% block title %}{% endblock %}</title>
+    <link rel="icon" href="{{ asset('assets/img/logo.svg') }}" sizes="any" type="image/svg+xml">
+    <link rel="stylesheet" href="{{ asset('assets/css/bootstrap.css') }}">
+    <link rel="stylesheet" href="{{ asset('assets/css/bootstrap.rtl.css') }}">
+    <link rel="stylesheet" href="{{ asset('assets/css/bootstrap-grid.rtl.css') }}">
+    <link rel="stylesheet" href="{{ asset('assets/css/bootstrap-reboot.css') }}">
+    <link rel="stylesheet" href="{{ asset('assets/css/bootstrap-reboot.rtl.css') }}">
+    <link rel="stylesheet" href="{{ asset('assets/css/bootstrap-utilities.css') }}">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="{{ asset('assets/css/custom/global.css') }}">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/select2@4.0.13/dist/css/select2.min.css">
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.0.13/dist/js/select2.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/vis/4.21.0/vis.min.js"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/vis/4.21.0/vis-timeline-graph2d.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
 
-        {% block javascripts %}
-        {% endblock %}
-    </head>
-    <body>
-        {% block body %}{% endblock %}
-    </body>
+</head>
+<body>
+<div class="container-fluid h-100">
+    <div class="row shadow-sm">
+        <nav class="navbar navbar-expand-lg navbar-light bg-light w-100 navbar-large">
+            <div class="container-fluid">
+                <a class="navbar-brand" href="#"><img height="45px" src="{{ asset('assets/img/logo.svg') }}"></a>
+                <div class="collapse navbar-collapse justify-content-center">
+                    <ul class="navbar-nav">
+                        <li class="nav-item">
+                            <a class="nav-link {{ (app.request.attributes.get('_route') in [
+                                'app_dashboard'
+                            ]) ? 'active': '' }}" href="{{ path('app_dashboard') }}">Dashboard</a>
+                        </li>
+                        {% if is_granted('ROLE_MANAGE_VEHICLES') %}
+                        <li class="nav-item dropdown">
+                            <a class="nav-link {{ (app.request.attributes.get('_route') in [
+                                'app_vehicle',
+                                'app_vehicle_new',
+                                'app_vehicle_edit'
+                            ]) ? 'active': '' }}" id="vehiclesDropdown" role="button">
+                                Pojazdy
+                            </a>
+                            <ul class="dropdown-menu text-center" aria-labelledby="vehiclesDropdown">
+                                <li><a class="dropdown-item {{ (app.request.attributes.get('_route') in [
+                                        'app_vehicle',
+                                        'app_vehicle_edit'
+                                    ]) ? 'active': '' }}" href="{{ path('app_vehicle') }}">Lista pojazdów</a></li>
+                                <li><a class="dropdown-item {{ (app.request.attributes.get('_route') in [
+                                        'app_vehicle_new'
+                                    ]) ? 'active': '' }}" href="{{ path('app_vehicle_new') }}">Dodaj nowy</a></li>
+                            </ul>
+                        </li>
+                        <li class="nav-item dropdown">
+                            <a class="nav-link {{ (app.request.attributes.get('_route') in [
+                                'app_trailer',
+                                'app_trailer_new',
+                                'app_trailer_edit'
+                            ]) ? 'active': '' }}" id="vehiclesDropdown" role="button">
+                                Naczepy
+                            </a>
+                            <ul class="dropdown-menu text-center" aria-labelledby="vehiclesDropdown">
+                                <li><a class="dropdown-item {{ (app.request.attributes.get('_route') in [
+                                        'app_trailer',
+                                        'app_trailer_edit'
+                                    ]) ? 'active': '' }}" href="{{ path('app_trailer') }}">Lista naczep</a></li>
+                                <li><a class="dropdown-item {{ (app.request.attributes.get('_route') in [
+                                        'app_trailer_new'
+                                    ]) ? 'active': '' }}" href="{{ path('app_trailer_new') }}">Dodaj nową</a></li>
+                            </ul>
+                        </li>
+                        {% endif %}
+                        {% if is_granted('ROLE_MANAGE_DRIVERS') %}
+                        <li class="nav-item dropdown">
+                            <a class="nav-link {{ (app.request.attributes.get('_route') in [
+                                'app_driver',
+                                'app_driver_new',
+                                'app_driver_edit'
+                            ]) ? 'active': '' }}" id="vehiclesDropdown" role="button">
+                                Kierowcy
+                            </a>
+                            <ul class="dropdown-menu text-center" aria-labelledby="vehiclesDropdown">
+                                <li><a class="dropdown-item {{ (app.request.attributes.get('_route') in [
+                                        'app_driver',
+                                        'app_driver_edit'
+                                    ]) ? 'active': '' }}" href="{{ path('app_driver') }}">Lista kierowców</a></li>
+                                <li><a class="dropdown-item {{ (app.request.attributes.get('_route') in [
+                                        'app_trailer_new'
+                                    ]) ? 'active': '' }}" href="{{ path('app_driver_new') }}">Dodaj nowego</a></li>
+                            </ul>
+                        </li>
+                        {% endif %}
+                        {% if is_granted('ROLE_MANAGE_TRANSPORT_ORDERS') %}
+                        <li class="nav-item dropdown">
+                            <a class="nav-link {{ (app.request.attributes.get('_route') in [
+                                'app_transport_order',
+                                'app_transport_order_new',
+                                'app_transport_order_edit'
+                            ]) ? 'active': '' }}" id="vehiclesDropdown" role="button">
+                                Zlecenia transportowe
+                            </a>
+                            <ul class="dropdown-menu text-center" aria-labelledby="vehiclesDropdown">
+                                <li>
+                                    <a class="dropdown-item {{ (app.request.attributes.get('_route') in [
+                                        'app_transport_order',
+                                        'app_transport_order_edit'
+                                    ]) ? 'active': '' }}" href="{{ path('app_transport_order') }}">Lista zleceń</a>
+                                </li>
+                                <li>
+                                    <a class="dropdown-item {{ (app.request.attributes.get('_route') in [
+                                        'app_transport_order_new'
+                                    ]) ? 'active': '' }}" href="{{ path('app_transport_order_new') }}">Dodaj nowe</a>
+                                </li>
+                            </ul>
+                        </li>
+                        {% endif %}
+                        {% if is_granted('ROLE_MANAGE_RESERVATIONS') %}
+                        <li class="nav-item dropdown">
+                            <a class="nav-link {{ (app.request.attributes.get('_route') in [
+                                'app_reservation',
+                                'app_reservation_new',
+                                'app_reservation_edit'
+                            ]) ? 'active': '' }}" id="vehiclesDropdown" role="button">
+                                Rezerwacje
+                            </a>
+                            <ul class="dropdown-menu text-center" aria-labelledby="vehiclesDropdown">
+                                <li>
+                                    <a class="dropdown-item {{ (app.request.attributes.get('_route') in [
+                                        'app_reservation',
+                                        'app_reservation_edit'
+                                    ]) ? 'active': '' }}" href="{{ path('app_reservation') }}">Podgląd rezerwacji</a>
+                                </li>
+                                <li>
+                                    <a class="dropdown-item {{ (app.request.attributes.get('_route') in [
+                                        'app_reservation_new'
+                                    ]) ? 'active': '' }}" href="{{ path('app_reservation_new') }}">Dodaj nową</a>
+                                </li>
+                            </ul>
+                        </li>
+                        {% endif %}
+                        {% if is_granted('ROLE_ADMIN') %}
+                        <li class="nav-item dropdown">
+                            <a class="nav-link {{ (app.request.attributes.get('_route') in [
+                                'app_user',
+                                'app_user_new',
+                                'app_user_edit'
+                            ]) ? 'active': '' }}" id="vehiclesDropdown" role="button">
+                                Użytkownicy
+                            </a>
+                            <ul class="dropdown-menu text-center" aria-labelledby="vehiclesDropdown">
+                                <li><a class="dropdown-item {{ (app.request.attributes.get('_route') in [
+                                        'app_user',
+                                        'app_user_edit'
+                                    ]) ? 'active': '' }}" href="{{ path('app_user') }}">Lista użytkowników</a></li>
+                                <li><a class="dropdown-item {{ (app.request.attributes.get('_route') in [
+                                        'app_user_new'
+                                    ]) ? 'active': '' }}" href="{{ path('app_user_new') }}">Dodaj nowego</a></li>
+                            </ul>
+                        </li>
+                        {% endif %}
+                    </ul>
+                </div>
+            </div>
+        </nav>
+    </div>
+    <div class="d-none"></div>
+    <div class="d-flex justify-content-center mt-3">
+        <div style="width: 85%;">
+            {% for type, messages in app.flashes %}
+                {% for message in messages %}
+                    <div class="alert alert-{{ type == 'success' ? 'success' : (type == 'error' ? 'danger' : (type == 'warning' ? 'warning' : 'info')) }} alert-dismissible fade show d-flex align-items-center justify-content-between" role="alert">
+                        <div class="w-100">
+                            {{ message }}
+                        </div>
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                {% endfor %}
+            {% endfor %}
+        </div>
+    </div>
+
+
+
+    {% block body %}
+    {% endblock %}
+</div>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        // if (typeof bootstrap !== "undefined") {
+        //     document.querySelectorAll(".btn-close").forEach(button => {
+        //         button.addEventListener("click", function () {
+        //             let alert = button.closest(".alert");
+        //             let bsAlert = new bootstrap.Alert(alert);
+        //             bsAlert.close();
+        //         });
+        //     });
+        //
+        //     setTimeout(() => {
+        //         document.querySelectorAll(".alert").forEach(alert => {
+        //             let bsAlert = new bootstrap.Alert(alert);
+        //             bsAlert.close();
+        //         });
+        //     }, 5000);
+        // } else {
+        //     console.error("Bootstrap JS nie jest załadowany.");
+        // }
+
+        document.querySelectorAll(".dropdown-toggle").forEach(dropdown => {
+            dropdown.addEventListener("mouseenter", function () {
+                let menu = this.nextElementSibling;
+                if (menu) {
+                    menu.classList.add("show");
+                }
+            });
+
+            dropdown.addEventListener("mouseleave", function () {
+                let menu = this.nextElementSibling;
+                if (menu) {
+                    setTimeout(() => menu.classList.remove("show"), 200);
+                }
+            });
+        });
+
+        document.querySelectorAll("select.form-select").forEach(select => {
+            if (select.options.length === 0 || (select.options.length === 1 && select.options[0].value === "")) {
+                let option = document.createElement("option");
+                option.textContent = "Brak dostępnych opcji";
+                option.disabled = true;
+                option.selected = true;
+                select.appendChild(option);
+            }
+        });
+
+    });
+</script>
+
+{% block javascripts %}
+{% endblock %}
+</body>
 </html>

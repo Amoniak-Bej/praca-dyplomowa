@@ -1,0 +1,120 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Ustawienia konta{% endblock %}
+
+{% block body %}
+    {{ form_start(form, {'attr': {'class': 'needs-validation', 'novalidate': 'novalidate'}}) }}
+    <div class="d-flex justify-content-center align-items-center">
+        <div class="card shadow-sm border-0 rounded-lg w-75">
+            <div class="card-header bg-light text-center fw-bold p-3">
+                <div class="card-title">
+                    Ustawienia konta
+                </div>
+            </div>
+            <div class="card-body p-3">
+
+                <!-- Informacje o koncie -->
+                <h5 class="fw-bold mb-3">Informacje o koncie</h5>
+                <table class="table table-bordered">
+                    <tr>
+                        <th class="fw-bold">Nazwa użytkownika:</th>
+                        <td>{{ user.username }}</td>
+                    </tr>
+                    <tr>
+                        <th class="fw-bold">Imię i nazwisko:</th>
+                        <td>{{ user.name }} {{ user.surname }}</td>
+                    </tr>
+                    <tr>
+                        <th class="fw-bold">E-mail:</th>
+                        <td>{{ user.email }}</td>
+                    </tr>
+                    <tr>
+                        <th class="fw-bold">Role:</th>
+                        <td>
+                            {% set role_names = {
+                                'ROLE_USER': 'Użytkownik',
+                                'ROLE_ADMIN': 'Administrator',
+                                'ROLE_MANAGE_VEHICLES': 'Zarządzanie pojazdami',
+                                'ROLE_MANAGE_DRIVERS': 'Zarządzanie kierowcami',
+                                'ROLE_MANAGE_RESERVATIONS': 'Zarządzanie rezerwacjami',
+                                'ROLE_MANAGE_TRANSPORT_ORDERS': 'Zarządzanie zleceniami transportowymi'
+                            } %}
+
+                            <div class="d-flex flex-wrap" style="max-height: 100px; overflow-y: auto;">
+                                {% for role in user.roles %}
+                                    <span class="badge bg-primary m-1">{{ role_names[role] ?? role }}</span>
+                                {% endfor %}
+                            </div>
+                        </td>
+                    </tr>
+                </table>
+
+                <!-- Zmień hasło -->
+                <h5 class="fw-bold mt-4">Zmień hasło</h5>
+
+                <div class="form-floating mb-3">
+                    {{ form_widget(form.currentPassword, {'attr': {'class': 'form-control', 'placeholder': 'Aktualne hasło'}}) }}
+                    {{ form_label(form.currentPassword) }}
+                    {{ form_errors(form.currentPassword) }}
+                </div>
+
+                <div class="form-floating mb-3">
+                    {{ form_widget(form.newPassword.first, {'attr': {'class': 'form-control', 'placeholder': 'Nowe hasło'}}) }}
+                    {{ form_label(form.newPassword.first) }}
+                    {{ form_errors(form.newPassword.first) }}
+                </div>
+
+                <div class="form-floating mb-3">
+                    {{ form_widget(form.newPassword.second, {'attr': {'class': 'form-control', 'placeholder': 'Powtórz nowe hasło'}}) }}
+                    {{ form_label(form.newPassword.second) }}
+                    {{ form_errors(form.newPassword.second) }}
+                </div>
+            </div>
+
+            <div class="card-footer d-flex justify-content-end gap-2">
+                {{ form_widget(form.save, {'attr': {'class': 'btn btn-primary'}}) }}
+                <a href="{{ path('app_dashboard') }}" class="btn btn-secondary">Powrót</a>
+            </div>
+        </div>
+    </div>
+    {{ form_end(form) }}
+{% endblock %}
+
+{% block javascripts %}
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            let form = document.querySelector("form");
+            form.addEventListener("submit", function (event) {
+                event.preventDefault();
+
+                let formData = new FormData(form);
+
+                fetch(form.action, {
+                    method: form.method,
+                    body: formData,
+                    headers: {
+                        "X-Requested-With": "XMLHttpRequest"
+                    }
+                }).then(response => response.json()).then(data => {
+                    if (data.success) {
+                        Swal.fire({
+                            title: "Sukces!",
+                            text: "Hasło zostało pomyślnie zmienione.",
+                            icon: "success",
+                            confirmButtonText: "OK"
+                        }).then(() => {
+                            location.reload();
+                        });
+                    } else {
+                        Swal.fire({
+                            title: "Błąd!",
+                            text: "Wystąpił problem podczas zmiany hasła.",
+                            icon: "error",
+                            confirmButtonText: "OK"
+                        });
+                    }
+                }).catch(error => console.error("Błąd:", error));
+            });
+        });
+    </script>
+{% endblock %}

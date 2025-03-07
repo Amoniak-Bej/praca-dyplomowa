@@ -1,0 +1,223 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Edytuj zlecenie transportowe{% endblock %}
+
+{% block body %}
+    {{ form_start(form, {'attr': {'class': 'needs-validation', 'novalidate': 'novalidate'}}) }}
+    <div class="d-flex justify-content-center align-items-center">
+        <div class="card shadow-sm border-0 rounded-lg w-75">
+            <div class="card-header bg-light text-center fw-bold p-3">
+                <div class="card-title">
+                    Edytuj zlecenie transportowe
+                </div>
+            </div>
+            <div class="card-body p-3">
+                <div class="row pb-3 border-bottom mb-4">
+                    <div class="col-md-6">
+                        <div class="form-floating mb-3">
+                            {{ form_widget(form.orderNumber, {
+                                'attr': {
+                                    'placeholder': 'Numer zamówienia',
+                                    'class': 'form-control',
+                                    'readonly': true
+                                }
+                            }) }}
+                            {{ form_label(form.orderNumber) }}
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-floating mb-3">
+                            {{ form_widget(form.status, {
+                                'attr': {'class': 'form-select'}
+                            }) }}
+                            {{ form_label(form.status) }}
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-floating mb-3">
+                            {{ form_widget(form.fromCountry) }}
+                            {{ form_label(form.fromCountry) }}
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-floating mb-3">
+                            {{ form_widget(form.toCountry) }}
+                            {{ form_label(form.toCountry) }}
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-floating mb-3">
+                            {{ form_widget(form.fromStreet) }}
+                            {{ form_label(form.fromStreet) }}
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-floating mb-3">
+                            {{ form_widget(form.toStreet) }}
+                            {{ form_label(form.toStreet) }}
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-3">
+                        <div class="form-floating mb-3">
+                            {{ form_widget(form.fromPostalCode) }}
+                            {{ form_label(form.fromPostalCode) }}
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="form-floating mb-3">
+                            {{ form_widget(form.fromCity) }}
+                            {{ form_label(form.fromCity) }}
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="form-floating mb-3">
+                            {{ form_widget(form.toPostalCode) }}
+                            {{ form_label(form.toPostalCode) }}
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="form-floating mb-3">
+                            {{ form_widget(form.toCity) }}
+                            {{ form_label(form.toCity) }}
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-floating mb-3">
+                            {{ form_widget(form.loadingDateTime, {
+                                'attr': {'class': 'form-control datetimepicker'}
+                            }) }}
+                            {{ form_label(form.loadingDateTime) }}
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-floating mb-3">
+                            {{ form_widget(form.unloadingDateTime, {
+                                'attr': {'class': 'form-control datetimepicker'}
+                            }) }}
+                            {{ form_label(form.unloadingDateTime) }}
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="form-floating mb-3">
+                            {{ form_widget(form.loadType, {'attr': {'class': 'form-select'}}) }}
+                            {{ form_label(form.loadType) }}
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-floating mb-3">
+                            {{ form_widget(form.price) }}
+                            {{ form_label(form.price) }}
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-floating mb-3">
+                            {{ form_widget(form.currency, {'attr': {'class': 'form-select'}}) }}
+                            {{ form_label(form.currency) }}
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-floating mb-3">
+                            {{ form_widget(form.companyName) }}
+                            {{ form_label(form.companyName) }}
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-floating mb-3">
+                            {{ form_widget(form.companyNip) }}
+                            {{ form_label(form.companyNip) }}
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-floating mb-3">
+                            {{ form_widget(form.companyContactPerson) }}
+                            {{ form_label(form.companyContactPerson) }}
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="form-floating mb-3">
+                            {{ form_widget(form.companyEmail) }}
+                            {{ form_label(form.companyEmail) }}
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="form-floating mb-3">
+                            {{ form_widget(form.companyPhone) }}
+                            {{ form_label(form.companyPhone) }}
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-floating mb-3">
+                            {{ form_widget(form.companyCountry) }}
+                            {{ form_label(form.companyCountry) }}
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-floating mb-3">
+                            {{ form_widget(form.companyStreet) }}
+                            {{ form_label(form.companyStreet) }}
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-floating mb-3">
+                            {{ form_widget(form.companyPostalCode) }}
+                            {{ form_label(form.companyPostalCode) }}
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-floating mb-3">
+                            {{ form_widget(form.companyCity) }}
+                            {{ form_label(form.companyCity) }}
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-floating mb-3">
+                    {{ form_widget(form.notes) }}
+                    {{ form_label(form.notes) }}
+                </div>
+            </div>
+
+            <div class="card-footer d-flex justify-content-end gap-2">
+                {{ form_widget(form.save, {'attr': {'class': 'btn btn-primary'}}) }}
+                <a href="{{ path('app_transport_order') }}" class="btn btn-secondary">Powrót</a>
+            </div>
+        </div>
+    </div>
+    {{ form_end(form) }}
+{% endblock %}
+
+{% block javascripts %}
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            flatpickr(".datetimepicker", {
+                enableTime: true,
+                dateFormat: "Y-m-d H:i",
+                locale: "pl"
+            });
+        });
+    </script>
+{% endblock %}

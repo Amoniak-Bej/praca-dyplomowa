@@ -1,0 +1,110 @@
+{% extends 'base.html.twig' %}
+{% block title %}
+    Dashboard
+{% endblock %}
+{% block body %}
+    {% set role_names = {
+        'ROLE_USER': 'Użytkownik',
+        'ROLE_ADMIN': 'Administrator',
+        'ROLE_MANAGE_VEHICLES': 'Zarządzanie pojazdami',
+        'ROLE_MANAGE_DRIVERS': 'Zarządzanie kierowcami',
+        'ROLE_MANAGE_RESERVATIONS': 'Zarządzanie rezerwacjami',
+        'ROLE_MANAGE_TRANSPORT_ORDERS': 'Zarządzanie zleceniami transportowymi'
+    } %}
+
+    <div class="row justify-content-center">
+        <!-- Profil użytkownika -->
+        <div class="col-md-4 p-4">
+            <div class="card shadow-lg border-0 rounded-lg" style="background: #fff; color: #3F4254;">
+                <div class="card-header text-center fw-bold text-muted bg-light">
+                    Profil użytkownika
+                </div>
+                <div class="card-body text-center">
+                    <p class="fw-bold">Imię: <span class="fw-normal">{{ app.user.name }}</span></p>
+                    <p class="fw-bold">Nazwisko: <span class="fw-normal">{{ app.user.surname }}</span></p>
+                    <p class="fw-bold">Login: <span class="fw-normal">{{ app.user.username }}</span></p>
+                    <p class="fw-bold">Email: <span class="fw-normal">{{ app.user.email }}</span></p>
+                    <p class="fw-bold">Role:
+                        <span class="fw-normal">
+                            {{ app.user.roles|map(role => role_names[role] is defined ? role_names[role] : role)|join(', ') }}
+                        </span>
+                    </p>
+                    <a href="{{ path('app_settings') }}" class="btn btn-primary w-100 mb-2">Edytuj profil</a>
+                    <a href="{{ path('app_logout') }}" class="btn btn-danger w-100">Wyloguj</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Dostępne aktywności -->
+        <div class="col-md-6 p-4">
+            <div class="card shadow-lg border-0 rounded-lg" style="background: #fff; color: #3F4254;">
+                <div class="card-header text-center fw-bold text-muted bg-light">
+                    Dostępne aktywności
+                </div>
+                <div class="card-body">
+                    <div class="row text-center">
+                        {% if is_granted('ROLE_MANAGE_VEHICLES') %}
+                        <div class="col-md-4 mb-3">
+                            <a href="{{ path('app_vehicle') }}" class="text-decoration-none text-dark">
+                                <div class="activity-card">
+                                    <i class="bi bi-truck fs-1"></i>
+                                    <p class="fw-bold mt-2">Pojazdy</p>
+                                </div>
+                            </a>
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            <a href="{{ path('app_trailer') }}" class="text-decoration-none text-dark">
+                                <div class="activity-card">
+                                    <i class="bi bi-truck-flatbed fs-1"></i>
+                                    <p class="fw-bold mt-2">Naczepy</p>
+                                </div>
+                            </a>
+                        </div>
+                        {% endif %}
+                        {% if is_granted('ROLE_MANAGE_DRIVERS') %}
+                        <div class="col-md-4 mb-3">
+                            <a href="{{ path('app_driver') }}" class="text-decoration-none text-dark">
+                                <div class="activity-card">
+                                    <i class="bi bi-person-badge fs-1"></i>
+                                    <p class="fw-bold mt-2">Kierowcy</p>
+                                </div>
+                            </a>
+                        </div>
+                        {% endif %}
+                        {% if is_granted('ROLE_MANAGE_TRANSPORT_ORDERS') %}
+                        <div class="col-md-4 mb-3">
+                            <a href="{{ path('app_transport_order') }}" class="text-decoration-none text-dark">
+                                <div class="activity-card">
+                                    <i class="bi bi-clipboard-check fs-1"></i>
+                                    <p class="fw-bold mt-2">Zlecenia transportowe</p>
+                                </div>
+                            </a>
+                        </div>
+                        {% endif %}
+                        {% if is_granted('ROLE_MANAGE_RESERVATIONS') %}
+                        <div class="col-md-4 mb-3">
+                            <a href="{{ path('app_reservation') }}" class="text-decoration-none text-dark">
+                                <div class="activity-card">
+                                    <i class="bi bi-calendar-check fs-1"></i>
+                                    <p class="fw-bold mt-2">Rezerwacje</p>
+                                </div>
+                            </a>
+                        </div>
+                        {% endif %}
+                        {% if is_granted('ROLE_ADMIN') %}
+                        <div class="col-md-4 mb-3">
+                            <a href="{{ path('app_user') }}" class="text-decoration-none text-dark">
+                                <div class="activity-card">
+                                    <i class="bi bi-people fs-1"></i>
+                                    <p class="fw-bold mt-2">Użytkownicy</p>
+                                </div>
+                            </a>
+                        </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}

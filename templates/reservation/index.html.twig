@@ -1,0 +1,191 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Lista rezerwacji{% endblock %}
+
+{% block body %}
+    <div class="container-fluid mt-4">
+        <div class="row">
+            <!-- Tabela rezerwacji -->
+            <div class="col-md-5">
+                <div class="card shadow-sm border-0 rounded-lg">
+                    <div class="card-header bg-light text-center fw-bold p-3 d-flex justify-content-between align-items-center">
+                        <div class="card-title">Lista rezerwacji</div>
+                        <a href="{{ path('app_reservation_new') }}" class="btn btn-primary">
+                            <i class="bi bi-plus-circle"></i> Dodaj rezerwację
+                        </a>
+                    </div>
+                    <div class="card-body">
+                        <table id="reservationsTable" class="table table-bordered table-striped table-hover border">
+                            <thead>
+                            <tr>
+                                <th>Pojazd</th>
+                                <th>Kierowca</th>
+                                <th>Od</th>
+                                <th>Do</th>
+                                <th>Akcje</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {% for reservation in reservations %}
+                                <tr>
+                                    <td>{{ reservation.vehicle }}</td>
+                                    <td>{{ reservation.driver }}</td>
+                                    <td>{{ reservation.startDate|date('Y-m-d H:i') }}</td>
+                                    <td>{{ reservation.endDate|date('Y-m-d H:i') }}</td>
+                                    <td class="d-flex">
+                                        <a href="{{ path('app_reservation_edit', {id: reservation.id}) }}"
+                                           class="btn btn-sm btn-outline-primary d-flex align-items-center justify-content-center p-1 m-1">
+                                            <i class="bi bi-pencil-square fs-5"></i>
+                                        </a>
+                                        <button type="button"
+                                                class="btn btn-sm btn-outline-danger d-flex align-items-center justify-content-center p-1 m-1 delete-reservation"
+                                                data-reservation-id="{{ reservation.id }}">
+                                            <i class="bi bi-trash fs-5"></i>
+                                        </button>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                            </tbody>
+                            <tfoot>
+                            <tr>
+                                <th>Pojazd</th>
+                                <th>Kierowca</th>
+                                <th>Od</th>
+                                <th>Do</th>
+                                <th>Akcje</th>
+                            </tr>
+                            </tfoot>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Kalendarz rezerwacji -->
+            <div class="col-md-7">
+                <div class="card shadow-sm border-0 rounded-lg">
+                    <div class="card-header bg-light text-center fw-bold p-3">
+                        <div class="card-title">Kalendarz rezerwacji</div>
+                    </div>
+                    <div class="card-body">
+                        <div id="timeline"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block javascripts %}
+    <script>
+        $(document).ready(function() {
+            // Inicjalizacja DataTables
+            $('#reservationsTable').DataTable({
+                "language": {
+                    "lengthMenu": "Pokaż _MENU_ wpisów",
+                    "zeroRecords": "Brak wyników",
+                    "info": "Strona _PAGE_ z _PAGES_",
+                    "infoEmpty": "Brak dostępnych rezerwacji",
+                    "infoFiltered": "(filtrowane z _MAX_ rekordów)",
+                    "search": "Szukaj:",
+                    "paginate": {
+                        "first": "Pierwsza",
+                        "last": "Ostatnia",
+                        "next": "Następna",
+                        "previous": "Poprzednia"
+                    }
+                },
+                "pageLength": 10,
+                "responsive": true,
+                "autoWidth": false,
+                "dom": "<'dt--top-section'<'row'<'col-12 col-sm-6 d-flex justify-content-sm-start justify-content-center'l><'col-12 col-sm-6 d-flex justify-content-sm-end justify-content-center mt-sm-0 mt-3'f>>>" +
+                    "<'table-responsive'tr>" +
+                    "<'dt--bottom-section d-sm-flex justify-content-sm-between text-center'<'dt--pages-count mb-sm-0 mb-3'i><'dt--pagination'p>>"
+            });
+
+            // Obsługa usuwania rezerwacji
+            $(".delete-reservation").on("click", function () {
+                let reservationId = $(this).data("reservation-id");
+                let _url = '{{ path('app_reservation_delete', {id: -99}) }}'.replace('-99', reservationId);
+
+                Swal.fire({
+                    title: "Czy na pewno chcesz usunąć tę rezerwację?",
+                    text: "Tej operacji nie można cofnąć!",
+                    icon: "warning",
+                    showCancelButton: true,
+                    confirmButtonColor: "#d33",
+                    cancelButtonColor: "#3085d6",
+                    confirmButtonText: "Tak, usuń!",
+                    cancelButtonText: "Anuluj",
+                    reverseButtons: true
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        $.ajax({
+                            url: _url,
+                            type: "DELETE",
+                            headers: {
+                                "X-Requested-With": "XMLHttpRequest",
+                                "Content-Type": "application/json"
+                            },
+                            success: function () {
+                                Swal.fire({
+                                    title: "Usunięto!",
+                                    text: "Rezerwacja została pomyślnie usunięta.",
+                                    icon: "success",
+                                    confirmButtonText: "OK"
+                                }).then(() => {
+                                    location.reload();
+                                });
+                            },
+                            error: function () {
+                                Swal.fire({
+                                    title: "Błąd!",
+                                    text: "Wystąpił problem podczas usuwania rezerwacji.",
+                                    icon: "error",
+                                    confirmButtonText: "OK"
+                                });
+                            }
+                        });
+                    }
+                });
+            });
+
+            // Pobieranie i wyświetlanie kalendarza rezerwacji
+            fetch("{{ path('app_reservation_calendar_data') }}")
+                .then(response => response.json())
+                .then(data => {
+                    let container = document.getElementById('timeline');
+                    let items = new vis.DataSet();
+                    let groups = new vis.DataSet();
+
+                    data.forEach(item => {
+                        if (item.className === "reservation-event") {
+                            groups.add({ id: item.id, content: item.content });
+                        }
+                        items.add(item);
+                    });
+
+                    let options = {
+                        editable: false,
+                        margin: { item: 10 },
+                        orientation: { axis: "top" },
+                        start: new Date(new Date().setDate(new Date().getDate() - 3)),
+                        end: new Date(new Date().setDate(new Date().getDate() + 5)),
+                        zoomMin: 1000 * 60 * 60 * 24,
+                        zoomMax: 1000 * 60 * 60 * 24 * 30,
+                        groupOrder: "id",
+                        template: function (item) {
+                            if (item.className === "reservation-event") {
+                                return `<div class="reservation-label">${item.content}</div>`;
+                            }
+                            if (item.className === "order-event") {
+                                return `<div class="order-label" style="background-color: #f8d7da;">${item.content}</div>`;
+                            }
+                            return item.content;
+                        }
+                    };
+
+                    new vis.Timeline(container, items, options, groups);
+                });
+        });
+    </script>
+{% endblock %}

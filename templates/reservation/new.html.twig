@@ -1,0 +1,148 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Dodaj rezerwację{% endblock %}
+
+{% block body %}
+    <div class="container mt-4">
+        <div class="card shadow-sm border-0 rounded-lg">
+            <div class="card-header bg-light text-center fw-bold p-3">
+                <div class="card-title">Dodaj nową rezerwację</div>
+            </div>
+            <div class="card-body">
+                {{ form_start(form) }}
+                {{ form_start(form, {'attr': {'id': 'reservationForm', 'novalidate': 'novalidate'}}) }}
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-floating mb-3">
+                            {{ form_widget(form.driver, {
+                                'attr': {
+                                    'class': 'form-select' ~ (form.driver.vars.errors|length > 0 ? ' is-invalid' : '')
+                                }
+                            }) }}
+                            {{ form_label(form.driver) }}
+                            {% if form.driver.vars.errors|length > 0 %}
+                                <div class="invalid-feedback">
+                                    {{ form_errors(form.driver) }}
+                                </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-floating mb-3">
+                            {{ form_widget(form.vehicle, {
+                                'attr': {
+                                    'class': 'form-select' ~ (form.vehicle.vars.errors|length > 0 ? ' is-invalid' : '')
+                                }
+                            }) }}
+                            {{ form_label(form.vehicle) }}
+                            {% if form.vehicle.vars.errors|length > 0 %}
+                                <div class="invalid-feedback">
+                                    {{ form_errors(form.vehicle) }}
+                                </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-floating mb-3">
+                    {{ form_widget(form.trailer, {
+                        'attr': {
+                            'class': 'form-select' ~ (form.trailer.vars.errors|length > 0 ? ' is-invalid' : '')
+                        }
+                    }) }}
+                    {{ form_label(form.trailer) }}
+                    {% if form.trailer.vars.errors|length > 0 %}
+                        <div class="invalid-feedback">
+                            {{ form_errors(form.trailer) }}
+                        </div>
+                    {% endif %}
+                </div>
+
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-floating mb-3">
+                            {{ form_widget(form.startDate, {
+                                'attr': {
+                                    'class': 'form-control datetimepicker' ~ (form.startDate.vars.errors|length > 0 ? ' is-invalid' : '')
+                                }
+                            }) }}
+                            {{ form_label(form.startDate) }}
+                            {% if form.startDate.vars.errors|length > 0 %}
+                                <div class="invalid-feedback">
+                                    {{ form_errors(form.startDate) }}
+                                </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-floating mb-3">
+                            {{ form_widget(form.endDate, {
+                                'attr': {
+                                    'class': 'form-control datetimepicker' ~ (form.endDate.vars.errors|length > 0 ? ' is-invalid' : '')
+                                }
+                            }) }}
+                            {{ form_label(form.endDate) }}
+                            {% if form.endDate.vars.errors|length > 0 %}
+                                <div class="invalid-feedback">
+                                    {{ form_errors(form.endDate) }}
+                                </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-floating mb-3">
+                            {{ form_widget(form.startMileage, {
+                                'attr': {
+                                    'class': 'form-control' ~ (form.startMileage.vars.errors|length > 0 ? ' is-invalid' : '')
+                                }
+                            }) }}
+                            {{ form_label(form.startMileage) }}
+                            {% if form.startMileage.vars.errors|length > 0 %}
+                                <div class="invalid-feedback">
+                                    {{ form_errors(form.startMileage) }}
+                                </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-floating mb-3">
+                            {{ form_widget(form.endMileage, {
+                                'attr': {
+                                    'class': 'form-control' ~ (form.endMileage.vars.errors|length > 0 ? ' is-invalid' : '')
+                                }
+                            }) }}
+                            {{ form_label(form.endMileage) }}
+                            {% if form.endMileage.vars.errors|length > 0 %}
+                                <div class="invalid-feedback">
+                                    {{ form_errors(form.endMileage) }}
+                                </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+
+                <div class="d-flex justify-content-end gap-2">
+                    {{ form_widget(form.save, {'attr': {'class': 'btn btn-primary'}}) }}
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Anuluj</button>
+                </div>
+                {{ form_end(form) }}
+
+                {{ form_end(form) }}
+            </div>
+        </div>
+    </div>
+{% endblock %}
+{% block javascripts %}
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            flatpickr(".datetimepicker", {
+                enableTime: true,
+                dateFormat: "Y-m-d H:i",
+                locale: "pl"
+            });
+        });
+    </script>
+{% endblock %}

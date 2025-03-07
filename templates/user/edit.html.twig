@@ -1,0 +1,185 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Edytuj użytkownika{% endblock %}
+
+{% block body %}
+    {{ form_start(form, {'attr': {'class': 'needs-validation', 'novalidate': 'novalidate'}}) }}
+    <div class="d-flex justify-content-center align-items-center">
+        <div class="card shadow-sm border-0 rounded-lg w-75">
+            <div class="card-header bg-light text-center fw-bold p-3">
+                <div class="card-title">
+                    Edytuj użytkownika
+                </div>
+            </div>
+            <div class="card-body p-3">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-floating mb-3">
+                            {{ form_widget(form.username, {
+                                'attr': {
+                                    'placeholder': 'Nazwa użytkownika',
+                                    'class': 'form-control' ~ (form.username.vars.errors|length > 0 ? ' is-invalid' : ''),
+                                    'readonly': 'readonly'
+                                }
+                            }) }}
+                            {{ form_label(form.username) }}
+                            {% if form.username.vars.errors|length > 0 %}
+                                <div class="invalid-feedback">
+                                    {{ form_errors(form.username) }}
+                                </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-floating mb-3">
+                            {{ form_widget(form.email, {
+                                'attr': {
+                                    'placeholder': 'E-mail',
+                                    'class': 'form-control' ~ (form.email.vars.errors|length > 0 ? ' is-invalid' : '')
+                                }
+                            }) }}
+                            {{ form_label(form.email) }}
+                            {% if form.email.vars.errors|length > 0 %}
+                                <div class="invalid-feedback">
+                                    {{ form_errors(form.email) }}
+                                </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-floating mb-3">
+                            {{ form_widget(form.name, {
+                                'attr': {
+                                    'placeholder': 'Imię',
+                                    'class': 'form-control' ~ (form.name.vars.errors|length > 0 ? ' is-invalid' : '')
+                                }
+                            }) }}
+                            {{ form_label(form.name) }}
+                            {% if form.name.vars.errors|length > 0 %}
+                                <div class="invalid-feedback">
+                                    {{ form_errors(form.name) }}
+                                </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-floating mb-3">
+                            {{ form_widget(form.surname, {
+                                'attr': {
+                                    'placeholder': 'Nazwisko',
+                                    'class': 'form-control' ~ (form.surname.vars.errors|length > 0 ? ' is-invalid' : '')
+                                }
+                            }) }}
+                            {{ form_label(form.surname) }}
+                            {% if form.surname.vars.errors|length > 0 %}
+                                <div class="invalid-feedback">
+                                    {{ form_errors(form.surname) }}
+                                </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-floating mb-3">
+                            {{ form_widget(form.password, {
+                                'attr': {
+                                    'placeholder': 'Hasło (pozostaw puste, jeśli nie zmieniasz)',
+                                    'class': 'form-control' ~ (form.password.vars.errors|length > 0 ? ' is-invalid' : '')
+                                }
+                            }) }}
+                            {{ form_label(form.password) }}
+                            {% if form.password.vars.errors|length > 0 %}
+                                <div class="invalid-feedback">
+                                    {{ form_errors(form.password) }}
+                                </div>
+                            {% endif %}
+                        </div>
+                    </div>
+
+                    <div class="col-md-6">
+                        <div class="form-floating mb-3">
+                            <input type="text" class="form-control" id="roles-dropdown" placeholder="Wybierz role" readonly>
+                            <div class="custom-dropdown">
+                                {% for choice in form.roles.vars.choices %}
+                                    <div class="dropdown-item" data-value="{{ choice.value }}">{{ choice.label }}</div>
+                                {% endfor %}
+                            </div>
+                            {{ form_widget(form.roles, { 'attr': { 'class': 'd-none' } }) }} <!-- Ukryty select -->
+                            {{ form_label(form.roles) }}
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card-footer d-flex justify-content-end gap-2">
+                {{ form_widget(form.save, {'attr': {'class': 'btn btn-primary'}}) }}
+                <a href="{{ path('app_user') }}" class="btn btn-secondary">Powrót</a>
+            </div>
+        </div>
+    </div>
+    {{ form_end(form) }}
+{% endblock %}
+
+{% block javascripts %}
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            let dropdownInput = document.getElementById("roles-dropdown");
+            let dropdownList = document.querySelector(".custom-dropdown");
+            let hiddenSelect = document.querySelector("select[multiple]");
+
+
+            function initializeDropdown() {
+                let selectedOptions = [...hiddenSelect.selectedOptions].map(opt => opt.text);
+                dropdownInput.value = selectedOptions.length ? selectedOptions.join(", ") : "Wybierz role";
+                dropdownList.querySelectorAll(".dropdown-item").forEach(item => {
+                    let option = hiddenSelect.querySelector(`option[value="${item.dataset.value}"]`);
+                    if (option.selected) {
+                        item.classList.add("selected");
+                    } else {
+                        item.classList.remove("selected");
+                    }
+                });
+            }
+
+            dropdownInput.addEventListener("click", function () {
+                dropdownList.classList.toggle("show"); // Pokazuje/ukrywa listę
+            });
+
+            document.addEventListener("click", function (e) {
+                if (!dropdownInput.contains(e.target) && !dropdownList.contains(e.target)) {
+                    dropdownList.classList.remove("show");
+                }
+            });
+
+            dropdownList.querySelectorAll(".dropdown-item").forEach(item => {
+                item.addEventListener("click", function () {
+                    let value = this.dataset.value;
+                    let option = hiddenSelect.querySelector(`option[value="${value}"]`);
+
+                    if (option.selected) {
+                        option.selected = false; // Odkliknięcie opcji
+                        this.classList.remove("selected");
+                    } else {
+                        option.selected = true; // Zaznaczenie opcji
+                        this.classList.add("selected");
+                    }
+
+                    updateDropdownText();
+                });
+            });
+
+            function updateDropdownText() {
+                let selectedOptions = [...hiddenSelect.selectedOptions].map(opt => opt.text);
+                dropdownInput.value = selectedOptions.length ? selectedOptions.join(", ") : "Wybierz role";
+            }
+
+            initializeDropdown();
+        });
+    </script>
+
+{% endblock %}

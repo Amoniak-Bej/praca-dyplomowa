@@ -1,0 +1,450 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Dodaj zlecenie transportowe{% endblock %}
+
+{% block body %}
+    {{ form_start(form, {'attr': {'class': 'needs-validation', 'novalidate': 'novalidate'}}) }}
+    <div class="d-flex justify-content-center align-items-center">
+        <div class="card shadow-sm border-0 rounded-lg w-75">
+            <div class="card-header bg-light text-center fw-bold p-3">
+                <div class="card-title">
+                    Dodaj nowe zlecenie transportowe
+                </div>
+            </div>
+            <div class="card-body p-3">
+                <div class="row pb-3 border-bottom mb-4">
+                    <div class="col-md-6">
+                        <div class="form-floating mb-3">
+                            {{ form_widget(form.orderNumber, {
+                                'attr': {
+                                    'placeholder': 'Numer zamówienia',
+                                    'class': 'form-control' ~ (form.orderNumber.vars.errors|length > 0 ? ' is-invalid' : '')
+                                }
+                            }) }}
+                            {{ form_label(form.orderNumber) }}
+                            {% if form.orderNumber.vars.errors|length > 0 %}
+                                <div class="invalid-feedback">
+                                    {{ form_errors(form.orderNumber) }}
+                                </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-floating mb-3">
+                            {{ form_widget(form.status, {
+                                'attr': {
+                                    'placeholder': 'Status zlcenia',
+                                    'class': 'form-select' ~ (form.status.vars.errors|length > 0 ? ' is-invalid' : '')
+                                }
+                            }) }}
+                            {{ form_label(form.status) }}
+                            {% if form.status.vars.errors|length > 0 %}
+                                <div class="invalid-feedback">
+                                    {{ form_errors(form.status) }}
+                                </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-floating mb-3">
+                            {{ form_widget(form.fromCountry, {
+                                'attr': {
+                                    'placeholder': 'Kraj (adres od)',
+                                    'class': 'form-control' ~ (form.fromCountry.vars.errors|length > 0 ? ' is-invalid' : '')
+                                }
+                            }) }}
+                            {{ form_label(form.fromCountry) }}
+                            {% if form.fromCountry.vars.errors|length > 0 %}
+                                <div class="invalid-feedback">
+                                    {{ form_errors(form.fromCountry) }}
+                                </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-floating mb-3">
+                            {{ form_widget(form.toCountry, {
+                                'attr': {
+                                    'placeholder': 'Kraj (adres do)',
+                                    'class': 'form-control' ~ (form.toCountry.vars.errors|length > 0 ? ' is-invalid' : '')
+                                }
+                            }) }}
+                            {{ form_label(form.toCountry) }}
+                            {% if form.toCountry.vars.errors|length > 0 %}
+                                <div class="invalid-feedback">
+                                    {{ form_errors(form.toCountry) }}
+                                </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-floating mb-3">
+                            {{ form_widget(form.fromStreet, {
+                                'attr': {
+                                    'placeholder': 'Ulica (adres od)',
+                                    'class': 'form-control' ~ (form.fromStreet.vars.errors|length > 0 ? ' is-invalid' : '')
+                                }
+                            }) }}
+                            {{ form_label(form.fromStreet) }}
+                            {% if form.fromStreet.vars.errors|length > 0 %}
+                                <div class="invalid-feedback">
+                                    {{ form_errors(form.fromStreet) }}
+                                </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-floating mb-3">
+                            {{ form_widget(form.toStreet, {
+                                'attr': {
+                                    'placeholder': 'Ulica (adres do)',
+                                    'class': 'form-control' ~ (form.toStreet.vars.errors|length > 0 ? ' is-invalid' : '')
+                                }
+                            }) }}
+                            {{ form_label(form.toStreet) }}
+                            {% if form.toStreet.vars.errors|length > 0 %}
+                                <div class="invalid-feedback">
+                                    {{ form_errors(form.toStreet) }}
+                                </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-3">
+                        <div class="form-floating mb-3">
+                            {{ form_widget(form.fromPostalCode, {
+                                'attr': {
+                                    'placeholder': 'Kod pocztowy (adres od)',
+                                    'class': 'form-control' ~ (form.fromPostalCode.vars.errors|length > 0 ? ' is-invalid' : '')
+                                }
+                            }) }}
+                            {{ form_label(form.fromPostalCode) }}
+                            {% if form.fromPostalCode.vars.errors|length > 0 %}
+                                <div class="invalid-feedback">
+                                    {{ form_errors(form.fromPostalCode) }}
+                                </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="form-floating mb-3">
+                            {{ form_widget(form.fromCity, {
+                                'attr': {
+                                    'placeholder': 'Miasto (adres od)',
+                                    'class': 'form-control' ~ (form.fromCity.vars.errors|length > 0 ? ' is-invalid' : '')
+                                }
+                            }) }}
+                            {{ form_label(form.fromCity) }}
+                            {% if form.fromCity.vars.errors|length > 0 %}
+                                <div class="invalid-feedback">
+                                    {{ form_errors(form.fromCity) }}
+                                </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="form-floating mb-3">
+                            {{ form_widget(form.toPostalCode, {
+                                'attr': {
+                                    'placeholder': 'Kod pocztowy (adres do)',
+                                    'class': 'form-control' ~ (form.toPostalCode.vars.errors|length > 0 ? ' is-invalid' : '')
+                                }
+                            }) }}
+                            {{ form_label(form.toPostalCode) }}
+                            {% if form.toPostalCode.vars.errors|length > 0 %}
+                                <div class="invalid-feedback">
+                                    {{ form_errors(form.toPostalCode) }}
+                                </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="form-floating mb-3">
+                            {{ form_widget(form.toCity, {
+                                'attr': {
+                                    'placeholder': 'Miasto (adres do)',
+                                    'class': 'form-control' ~ (form.toCity.vars.errors|length > 0 ? ' is-invalid' : '')
+                                }
+                            }) }}
+                            {{ form_label(form.toCity) }}
+                            {% if form.toCity.vars.errors|length > 0 %}
+                                <div class="invalid-feedback">
+                                    {{ form_errors(form.toCity) }}
+                                </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-floating mb-3">
+                            {{ form_widget(form.loadingDateTime, {
+                                'attr': {
+                                    'placeholder': 'Ulica (Data i godzina załadunku)',
+                                    'class': 'form-control datetimepicker' ~ (form.loadingDateTime.vars.errors|length > 0 ? ' is-invalid' : '')
+                                }
+                            }) }}
+                            {{ form_label(form.loadingDateTime) }}
+                            {% if form.loadingDateTime.vars.errors|length > 0 %}
+                                <div class="invalid-feedback">
+                                    {{ form_errors(form.loadingDateTime) }}
+                                </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-floating mb-3">
+                            {{ form_widget(form.unloadingDateTime, {
+                                'attr': {
+                                    'placeholder': 'Data i godzina rozładunku',
+                                    'class': 'form-control datetimepicker' ~ (form.unloadingDateTime.vars.errors|length > 0 ? ' is-invalid' : '')
+                                }
+                            }) }}
+                            {{ form_label(form.unloadingDateTime) }}
+                            {% if form.unloadingDateTime.vars.errors|length > 0 %}
+                                <div class="invalid-feedback">
+                                    {{ form_errors(form.unloadingDateTime) }}
+                                </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="form-floating mb-3">
+                            {{ form_widget(form.loadType, {
+                                'attr': {
+                                    'placeholder': 'Rodzaj ładunku',
+                                    'class': 'form-select' ~ (form.loadType.vars.errors|length > 0 ? ' is-invalid' : '')
+                                }
+                            }) }}
+                            {{ form_label(form.loadType) }}
+                            {% if form.loadType.vars.errors|length > 0 %}
+                                <div class="invalid-feedback">
+                                    {{ form_errors(form.loadType) }}
+                                </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-floating mb-3">
+                            {{ form_widget(form.price, {
+                                'attr': {
+                                    'placeholder': 'Cena',
+                                    'class': 'form-control' ~ (form.price.vars.errors|length > 0 ? ' is-invalid' : '')
+                                }
+                            }) }}
+                            {{ form_label(form.price) }}
+                            {% if form.price.vars.errors|length > 0 %}
+                                <div class="invalid-feedback">
+                                    {{ form_errors(form.price) }}
+                                </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-floating mb-3">
+                            {{ form_widget(form.currency, {
+                                'attr': {
+                                    'placeholder': 'Waluta',
+                                    'class': 'form-control' ~ (form.currency.vars.errors|length > 0 ? ' is-invalid' : '')
+                                }
+                            }) }}
+                            {{ form_label(form.currency) }}
+                            {% if form.currency.vars.errors|length > 0 %}
+                                <div class="invalid-feedback">
+                                    {{ form_errors(form.currency) }}
+                                </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-floating mb-3">
+                            {{ form_widget(form.companyName, {
+                                'attr': {
+                                    'placeholder': 'Nazwa firmy',
+                                    'class': 'form-control' ~ (form.companyName.vars.errors|length > 0 ? ' is-invalid' : '')
+                                }
+                            }) }}
+                            {{ form_label(form.companyName) }}
+                            {% if form.companyName.vars.errors|length > 0 %}
+                                <div class="invalid-feedback">
+                                    {{ form_errors(form.companyName) }}
+                                </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-floating mb-3">
+                            {{ form_widget(form.companyNip, {
+                                'attr': {
+                                    'placeholder': 'NIP firmy',
+                                    'class': 'form-control' ~ (form.companyNip.vars.errors|length > 0 ? ' is-invalid' : '')
+                                }
+                            }) }}
+                            {{ form_label(form.companyNip) }}
+                            {% if form.companyNip.vars.errors|length > 0 %}
+                                <div class="invalid-feedback">
+                                    {{ form_errors(form.companyNip) }}
+                                </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-floating mb-3">
+                            {{ form_widget(form.companyContactPerson, {
+                                'attr': {
+                                    'placeholder': 'Osoba kontaktowa',
+                                    'class': 'form-control' ~ (form.companyContactPerson.vars.errors|length > 0 ? ' is-invalid' : '')
+                                }
+                            }) }}
+                            {{ form_label(form.companyContactPerson) }}
+                            {% if form.companyContactPerson.vars.errors|length > 0 %}
+                                <div class="invalid-feedback">
+                                    {{ form_errors(form.companyContactPerson) }}
+                                </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="form-floating mb-3">
+                            {{ form_widget(form.companyEmail, {
+                                'attr': {
+                                    'placeholder': 'Email firmy',
+                                    'class': 'form-control' ~ (form.companyEmail.vars.errors|length > 0 ? ' is-invalid' : '')
+                                }
+                            }) }}
+                            {{ form_label(form.companyEmail) }}
+                            {% if form.companyEmail.vars.errors|length > 0 %}
+                                <div class="invalid-feedback">
+                                    {{ form_errors(form.companyEmail) }}
+                                </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="form-floating mb-3">
+                            {{ form_widget(form.companyPhone, {
+                                'attr': {
+                                    'placeholder': 'Telefon firmy',
+                                    'class': 'form-control' ~ (form.companyPhone.vars.errors|length > 0 ? ' is-invalid' : '')
+                                }
+                            }) }}
+                            {{ form_label(form.companyPhone) }}
+                            {% if form.companyPhone.vars.errors|length > 0 %}
+                                <div class="invalid-feedback">
+                                    {{ form_errors(form.companyPhone) }}
+                                </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-floating mb-3">
+                            {{ form_widget(form.companyCountry, {
+                                'attr': {
+                                    'placeholder': 'Kraj firmy',
+                                    'class': 'form-control' ~ (form.companyCountry.vars.errors|length > 0 ? ' is-invalid' : '')
+                                }
+                            }) }}
+                            {{ form_label(form.companyCountry) }}
+                            {% if form.companyCountry.vars.errors|length > 0 %}
+                                <div class="invalid-feedback">
+                                    {{ form_errors(form.companyCountry) }}
+                                </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                    <div class="col-md-6"></div>
+                    <div class="col-md-6">
+                        <div class="form-floating mb-3">
+                            {{ form_widget(form.companyStreet, {
+                                'attr': {
+                                    'placeholder': 'Ulica firmy',
+                                    'class': 'form-control' ~ (form.companyStreet.vars.errors|length > 0 ? ' is-invalid' : '')
+                                }
+                            }) }}
+                            {{ form_label(form.companyStreet) }}
+                            {% if form.companyStreet.vars.errors|length > 0 %}
+                                <div class="invalid-feedback">
+                                    {{ form_errors(form.companyStreet) }}
+                                </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-floating mb-3">
+                            {{ form_widget(form.companyPostalCode, {
+                                'attr': {
+                                    'placeholder': 'Kod pocztowy firmy',
+                                    'class': 'form-control' ~ (form.companyPostalCode.vars.errors|length > 0 ? ' is-invalid' : '')
+                                }
+                            }) }}
+                            {{ form_label(form.companyPostalCode) }}
+                            {% if form.companyPostalCode.vars.errors|length > 0 %}
+                                <div class="invalid-feedback">
+                                    {{ form_errors(form.companyPostalCode) }}
+                                </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-floating mb-3">
+                            {{ form_widget(form.companyCity, {
+                                'attr': {
+                                    'placeholder': 'Miasto firmy',
+                                    'class': 'form-control' ~ (form.companyCity.vars.errors|length > 0 ? ' is-invalid' : '')
+                                }
+                            }) }}
+                            {{ form_label(form.companyCity) }}
+                            {% if form.companyCity.vars.errors|length > 0 %}
+                                <div class="invalid-feedback">
+                                    {{ form_errors(form.companyCity) }}
+                                </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-floating mb-3">
+                    {{ form_widget(form.notes, {'attr': {'class': 'form-control'}}) }}
+                    {{ form_label(form.notes) }}
+                </div>
+            </div>
+
+            <div class="card-footer d-flex justify-content-end gap-2">
+                {{ form_widget(form.save, {'attr': {'class': 'btn btn-primary'}}) }}
+                <a href="{{ path('app_transport_order') }}" class="btn btn-secondary">Powrót</a>
+            </div>
+        </div>
+    </div>
+    {{ form_end(form) }}
+{% endblock %}
+
+{% block javascripts %}
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            flatpickr(".datetimepicker", {
+                enableTime: true,
+                dateFormat: "Y-m-d H:i",
+                locale: "pl"
+            });
+        });
+    </script>
+{% endblock %}

@@ -1,0 +1,215 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Dodaj naczepę{% endblock %}
+
+{% block body %}
+    {{ form_start(form, {'attr': {'class': 'needs-validation', 'novalidate': 'novalidate'}}) }}
+    <div class="d-flex justify-content-center align-items-center">
+        <div class="card shadow-sm border-0 rounded-lg w-75">
+            <div class="card-header bg-light text-center fw-bold p-3">
+                <div class="card-title">
+                    Dodaj nową naczepę
+                </div>
+            </div>
+            <div class="card-body p-3">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-floating mb-3">
+                            {{ form_widget(form.licenseNumber, {
+                                'attr': {
+                                    'placeholder': 'Numer rejestracyjny',
+                                    'class': 'form-control' ~ (form.licenseNumber.vars.errors|length > 0 ? ' is-invalid' : '')
+                                }
+                            }) }}
+                            {{ form_label(form.licenseNumber) }}
+                            {% if form.licenseNumber.vars.errors|length > 0 %}
+                                <div class="invalid-feedback">
+                                    {{ form_errors(form.licenseNumber) }}
+                                </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-floating mb-3">
+                            {{ form_widget(form.kind, {
+                                'attr': {
+                                    'placeholder': 'Rodzaj',
+                                    'class': 'form-control' ~ (form.kind.vars.errors|length > 0 ? ' is-invalid' : '')
+                                }
+                            }) }}
+                            {{ form_label(form.kind) }}
+                            {% if form.kind.vars.errors|length > 0 %}
+                                <div class="invalid-feedback">
+                                    {{ form_errors(form.kind) }}
+                                </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-floating mb-3">
+                            {{ form_widget(form.brand, {
+                                'attr': {
+                                    'placeholder': 'Marka',
+                                    'class': 'form-control' ~ (form.brand.vars.errors|length > 0 ? ' is-invalid' : '')
+                                }
+                            }) }}
+                            {{ form_label(form.brand) }}
+                            {% if form.brand.vars.errors|length > 0 %}
+                                <div class="invalid-feedback">
+                                    {{ form_errors(form.brand) }}
+                                </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-floating mb-3">
+                            {{ form_widget(form.yearOfProduction, {
+                                'attr': {
+                                    'placeholder': 'Rok produkcji',
+                                    'class': 'form-control' ~ (form.yearOfProduction.vars.errors|length > 0 ? ' is-invalid' : '')
+                                }
+                            }) }}
+                            {{ form_label(form.yearOfProduction) }}
+                            {% if form.yearOfProduction.vars.errors|length > 0 %}
+                                <div class="invalid-feedback">
+                                    {{ form_errors(form.yearOfProduction) }}
+                                </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-floating mb-3">
+                            {{ form_widget(form.purchaseDate, {
+                                'attr': {
+                                    'placeholder': 'Data zakupu',
+                                    'class': 'form-control datepicker' ~ (form.purchaseDate.vars.errors|length > 0 ? ' is-invalid' : '')
+                                }
+                            }) }}
+                            {{ form_label(form.purchaseDate) }}
+                            {% if form.purchaseDate.vars.errors|length > 0 %}
+                                <div class="invalid-feedback">
+                                    {{ form_errors(form.purchaseDate) }}
+                                </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-floating mb-3">
+                            {{ form_widget(form.firstRegisterDate, {
+                                'attr': {
+                                    'placeholder': 'Data pierwszej rejestracji',
+                                    'class': 'form-control datepicker' ~ (form.firstRegisterDate.vars.errors|length > 0 ? ' is-invalid' : '')
+                                }
+                            }) }}
+                            {{ form_label(form.firstRegisterDate) }}
+                            {% if form.firstRegisterDate.vars.errors|length > 0 %}
+                                <div class="invalid-feedback">
+                                    {{ form_errors(form.firstRegisterDate) }}
+                                </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-floating mb-3">
+                            {{ form_widget(form.salesDate, {
+                                'attr': {
+                                    'placeholder': 'Data sprzedaży',
+                                    'class': 'form-control datepicker' ~ (form.salesDate.vars.errors|length > 0 ? ' is-invalid' : '')
+                                }
+                            }) }}
+                            {{ form_label(form.salesDate) }}
+                            {% if form.salesDate.vars.errors|length > 0 %}
+                                <div class="invalid-feedback">
+                                    {{ form_errors(form.salesDate) }}
+                                </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-floating mb-3">
+                            {{ form_widget(form.mileage, {
+                                'attr': {
+                                    'placeholder': 'Przebieg',
+                                    'class': 'form-control' ~ (form.mileage.vars.errors|length > 0 ? ' is-invalid' : '')
+                                }
+                            }) }}
+                            {{ form_label(form.mileage) }}
+                            {% if form.mileage.vars.errors|length > 0 %}
+                                <div class="invalid-feedback">
+                                    {{ form_errors(form.mileage) }}
+                                </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-floating mb-3">
+                            {{ form_widget(form.caretaker, {
+                                'attr': {
+                                    'class': 'form-select' ~ (form.caretaker.vars.errors|length > 0 ? ' is-invalid' : '')
+                                }
+                            }) }}
+                            {{ form_label(form.caretaker) }}
+                            {% if form.caretaker.vars.errors|length > 0 %}
+                                <div class="invalid-feedback">
+                                    {{ form_errors(form.caretaker) }}
+                                </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-floating mb-3">
+                            {{ form_widget(form.mileageDate, {
+                                'attr': {
+                                    'class': 'form-control datepicker' ~ (form.mileageDate.vars.errors|length > 0 ? ' is-invalid' : '')
+                                }
+                            }) }}
+                            {{ form_label(form.mileageDate) }}
+                            {% if form.mileageDate.vars.errors|length > 0 %}
+                                <div class="invalid-feedback">
+                                    {{ form_errors(form.mileageDate) }}
+                                </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                    <div class="col-md-6 d-none">
+                        {{ form_widget(form.changedMileage) }}
+                    </div>
+                </div>
+            </div>
+
+            <div class="card-footer d-flex justify-content-end gap-2">
+                {{ form_widget(form.save, {'attr': {'class': 'btn btn-primary'}}) }}
+                <a href="{{ path('app_trailer') }}" class="btn btn-secondary">Powrót</a>
+            </div>
+        </div>
+    </div>
+    {{ form_end(form) }}
+{% endblock %}
+
+{% block javascripts %}
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            flatpickr(".datepicker", {
+                enableTime: false,
+                dateFormat: "Y-m-d",
+                locale: "pl"
+            });
+
+            document.getElementById("trailer_mileage").addEventListener("change", function () {
+                document.getElementById("trailer_changedMileage").checked = true;
+            });
+        });
+    </script>
+{% endblock %}

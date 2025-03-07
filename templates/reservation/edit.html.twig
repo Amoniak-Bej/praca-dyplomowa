@@ -1,0 +1,195 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Edytuj rezerwację{% endblock %}
+
+{% block body %}
+    {{ form_start(form, {'attr': {'class': 'needs-validation', 'novalidate': 'novalidate'}}) }}
+    <div class="d-flex justify-content-center align-items-center">
+        <div class="card shadow-sm border-0 rounded-lg w-75">
+            <div class="card-header bg-light text-center fw-bold p-3">
+                <div class="card-title">
+                    Edytuj rezerwację
+                </div>
+            </div>
+            <div class="card-body p-3">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="card shadow-sm border-0 rounded-lg">
+                            <div class="card-header bg-light text-center fw-bold p-3">
+                                <div class="card-title">
+                                    Informacje podstawowe
+                                </div>
+                            </div>
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="form-floating mb-3">
+                                            {{ form_widget(form.driver, {'attr': {'class': 'form-select'}}) }}
+                                            {{ form_label(form.driver) }}
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-floating mb-3">
+                                            {{ form_widget(form.vehicle, {'attr': {'class': 'form-select'}}) }}
+                                            {{ form_label(form.vehicle) }}
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="form-floating mb-3">
+                                    {{ form_widget(form.trailer, {'attr': {'class': 'form-select'}}) }}
+                                    {{ form_label(form.trailer) }}
+                                </div>
+
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="form-floating mb-3">
+                                            {{ form_widget(form.startDate, {'attr': {'class': 'form-control datetimepicker'}}) }}
+                                            {{ form_label(form.startDate) }}
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-floating mb-3">
+                                            {{ form_widget(form.endDate, {'attr': {'class': 'form-control datetimepicker'}}) }}
+                                            {{ form_label(form.endDate) }}
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="form-floating mb-3">
+                                            {{ form_widget(form.startMileage, {'attr': {'class': 'form-control'}}) }}
+                                            {{ form_label(form.startMileage) }}
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-floating mb-3">
+                                            {{ form_widget(form.endMileage, {'attr': {'class': 'form-control'}}) }}
+                                            {{ form_label(form.endMileage) }}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-6">
+                        <div class="card shadow-sm border-0 rounded-lg">
+                            <div class="card-header bg-light text-center fw-bold p-3">
+                                <div class="card-title">Zlecenia transportowe</div>
+                            </div>
+                            <div class="card-body">
+                                <table id="transportOrdersTable" class="table table-bordered table-striped">
+                                    <thead>
+                                    <tr>
+                                        <th><input type="checkbox" id="selectAll"></th>
+                                        <th>Numer zlecenia</th>
+                                        <th>Skąd</th>
+                                        <th>Dokąd</th>
+                                        <th>Data załadunku</th>
+                                        <th>Data rozładunku</th>
+                                        <th>Status</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    {% for order in transportOrders %}
+                                        <tr>
+                                            <td class="text-center">
+                                                <input type="checkbox" class="order-checkbox"
+                                                       value="{{ order.id }}"
+                                                       {% if order in assignedOrders %}checked{% endif %}>
+                                            </td>
+                                            <td>{{ order.orderNumber }}</td>
+                                            <td>{{ order.fromCity }}, {{ order.fromCountry }}</td>
+                                            <td>{{ order.toCity }}, {{ order.toCountry }}</td>
+                                            <td>{{ order.loadingDateTime|date('Y-m-d H:i') }}</td>
+                                            <td>{{ order.unloadingDateTime|date('Y-m-d H:i') }}</td>
+                                            <td>{{ order.status.label() }}</td>
+                                        </tr>
+                                    {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+            <div class="card-footer d-flex justify-content-end gap-2">
+                {{ form_widget(form.save, {'attr': {'class': 'btn btn-primary'}}) }}
+                <a href="{{ path('app_reservation') }}" class="btn btn-secondary">Powrót</a>
+            </div>
+        </div>
+    </div>
+    {{ form_end(form) }}
+{% endblock %}
+{% block javascripts %}
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            flatpickr(".datetimepicker", {
+                enableTime: true,
+                dateFormat: "Y-m-d H:i",
+                locale: "pl"
+            });
+
+            $('#transportOrdersTable').DataTable({
+                "language": {
+                    "lengthMenu": "Pokaż _MENU_ wpisów",
+                    "zeroRecords": "Brak wyników",
+                    "info": "Strona _PAGE_ z _PAGES_",
+                    "infoEmpty": "Brak dostępnych zleceń",
+                    "search": "Szukaj:",
+                    "paginate": {
+                        "first": "Pierwsza",
+                        "last": "Ostatnia",
+                        "next": "Następna",
+                        "previous": "Poprzednia"
+                    }
+                },
+                "pageLength": 5,
+                "responsive": true,
+                "autoWidth": false,
+                "dom": "<'dt--top-section'<'row'<'col-12 col-sm-6 d-flex justify-content-sm-start justify-content-center'l><'col-12 col-sm-6 d-flex justify-content-sm-end justify-content-center mt-sm-0 mt-3'f>>>" +
+                    "<'table-responsive'tr>" +
+                    "<'dt--bottom-section d-sm-flex justify-content-sm-between text-center'<'dt--pages-count mb-sm-0 mb-3'i><'dt--pagination'p>>"
+            });
+
+            document.getElementById("selectAll").addEventListener("change", function () {
+                let checkboxes = document.querySelectorAll(".order-checkbox");
+                checkboxes.forEach(checkbox => checkbox.checked = this.checked);
+                saveOrders();
+            });
+
+            document.querySelectorAll(".order-checkbox").forEach(checkbox => {
+                checkbox.addEventListener("change", saveOrders);
+            });
+
+            function saveOrders() {
+                let selectedOrders = [];
+                document.querySelectorAll(".order-checkbox:checked").forEach(checkbox => {
+                    selectedOrders.push(checkbox.value);
+                });
+
+                fetch("{{ path('app_reservation_update_orders', {'id': reservation.id}) }}", {
+                    method: "POST",
+                    body: JSON.stringify({ transportOrders: selectedOrders }),
+                    headers: {
+                        "Content-Type": "application/json",
+                        "X-Requested-With": "XMLHttpRequest"
+                    }
+                }).then(response => response.json()).then(data => {
+                    if (data.success) {
+                        toastr.success("Pomyślnie zapisano zmiany!", "Sukces");
+                    } else {
+                        toastr.error("Wystąpił błąd przy zapisie.", "Błąd");
+                    }
+                }).catch(() => {
+                    toastr.error("Nie udało się nawiązać połączenia z serwerem.", "Błąd");
+                });
+            }
+        });
+    </script>
+{% endblock %}
+

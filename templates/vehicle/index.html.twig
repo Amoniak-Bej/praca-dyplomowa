@@ -1,0 +1,162 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Lista pojazdów{% endblock %}
+
+{% block body %}
+    <div class="d-flex justify-content-center align-items-center mt-4">
+        <div class="card shadow-sm border-0 rounded-lg w-75">
+            <div class="card-header bg-light text-center fw-bold p-3">
+                <div class="card-title">
+                    Lista pojazdów
+                </div>
+            </div>
+            <div class="card-body ">
+                <table id="vehiclesTable" class="table table-bordered table-striped table-hover border">
+                    <thead>
+                    <tr>
+                        <th>Numer rejestracyjny</th>
+                        <th>Przebieg</th>
+                        <th>Data przebiegu</th>
+                        <th>Marka</th>
+                        <th>Model</th>
+                        <th>Typ</th>
+                        <th>VIN</th>
+                        <th>Rok produkcji</th>
+                        <th>Data zakupu</th>
+                        <th>Data pierwszej rejestracji</th>
+                        <th>Data sprzedaży</th>
+                        <th>Rodzaj paliwa</th>
+                        <th>Opiekun</th>
+                        <th>Edycja</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for vehicle in vehicles %}
+                        <tr>
+                            <td>{{ vehicle.licenseNumber }}</td>
+                            <td>{{ vehicle.mileage is not null ? vehicle.mileage ~ ' km' : 'Brak danych' }}</td>
+                            <td>{{ vehicle.mileageDate ? vehicle.mileageDate|date('Y-m-d') : 'Brak danych' }}</td>
+                            <td>{{ vehicle.brand }}</td>
+                            <td>{{ vehicle.model }}</td>
+                            <td>{{ vehicle.type }}</td>
+                            <td>{{ vehicle.vehicleIdentificationNumber }}</td>
+                            <td>{{ vehicle.yearOfProduction }}</td>
+                            <td>{{ vehicle.purchaseDate ? vehicle.purchaseDate|date('Y-m-d') : 'Brak danych' }}</td>
+                            <td>{{ vehicle.firstRegisterDate ? vehicle.firstRegisterDate|date('Y-m-d') : 'Brak danych' }}</td>
+                            <td>{{ vehicle.salesDate ? vehicle.salesDate|date('Y-m-d') : 'Brak danych' }}</td>
+                            <td>{{ vehicle.fuelType }}</td>
+                            <td>{{ vehicle.caretaker ? vehicle.caretaker.getUsername() : 'Brak opiekuna' }}</td>
+                            <td class="d-flex">
+                                <a href="{{ path('app_vehicle_edit', {id: vehicle.id}) }}"
+                                   class="btn btn-sm btn-outline-primary d-flex align-items-center justify-content-center p-1 m-1">
+                                    <i class="bi bi-pencil-square fs-5"></i>
+                                </a>
+                                <button type="button"
+                                        class="btn btn-sm btn-outline-danger d-flex align-items-center justify-content-center p-1 m-1 delete-vehicle"
+                                        data-vehicle-id="{{ vehicle.id }}">
+                                    <i class="bi bi-trash fs-5"></i>
+                                </button>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                    <tfoot>
+                    <tr>
+                        <th>Numer rejestracyjny</th>
+                        <th>Przebieg</th>
+                        <th>Data przebiegu</th>
+                        <th>Marka</th>
+                        <th>Model</th>
+                        <th>Typ</th>
+                        <th>VIN</th>
+                        <th>Rok produkcji</th>
+                        <th>Data zakupu</th>
+                        <th>Data pierwszej rejestracji</th>
+                        <th>Data sprzedaży</th>
+                        <th>Rodzaj paliwa</th>
+                        <th>Opiekun</th>
+                        <th>Edycja</th>
+                    </tr>
+                    </tfoot>
+                </table>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+{% block javascripts %}
+    <script>
+        $(document).ready(function() {
+            $('#vehiclesTable').DataTable({
+                "language": {
+                    "lengthMenu": "Pokaż _MENU_ wpisów",
+                    "zeroRecords": "Brak wyników",
+                    "info": "Strona _PAGE_ z _PAGES_",
+                    "infoEmpty": "Brak dostępnych pojazdów",
+                    "infoFiltered": "(filtrowane z _MAX_ rekordów)",
+                    "search": "Szukaj:",
+                    "paginate": {
+                        "first": "Pierwsza",
+                        "last": "Ostatnia",
+                        "next": "Następna",
+                        "previous": "Poprzednia"
+                    }
+                },
+                "pageLength": 10,
+                "responsive": true,
+                "autoWidth": false,
+                "dom": "<'dt--top-section'<'row'<'col-12 col-sm-6 d-flex justify-content-sm-start justify-content-center'l><'col-12 col-sm-6 d-flex justify-content-sm-end justify-content-center mt-sm-0 mt-3'f>>>" +
+                    "<'table-responsive'tr>" +
+                    "<'dt--bottom-section d-sm-flex justify-content-sm-between text-center'<'dt--pages-count mb-sm-0 mb-3'i><'dt--pagination'p>>"
+            });
+
+            $(".delete-vehicle").on("click", function () {
+                let vehicleId = $(this).data("vehicle-id");
+                let _url = '{{ path('app_vehicle_delete', {id: -99}) }}'.replace('-99', vehicleId);
+
+                Swal.fire({
+                    title: "Czy na pewno chcesz usunąć wybrany wpis?",
+                    text: "Tej operacji nie można cofnąć!",
+                    icon: "warning",
+                    showCancelButton: true,
+                    confirmButtonColor: "#d33",
+                    cancelButtonColor: "#3085d6",
+                    confirmButtonText: "Tak, usuń!",
+                    cancelButtonText: "Anuluj",
+                    reverseButtons: true
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        $.ajax({
+                            url: _url,
+                            type: "DELETE",
+                            headers: {
+                                "X-Requested-With": "XMLHttpRequest",
+                                "Content-Type": "application/json"
+                            },
+                            success: function (response) {
+                                Swal.fire({
+                                    title: "Usunięto!",
+                                    text: "Pojazd został pomyślnie usunięty.",
+                                    icon: "success",
+                                    confirmButtonText: "OK"
+                                }).then(() => {
+                                    location.reload();
+                                });
+                            },
+                            error: function (xhr) {
+                                Swal.fire({
+                                    title: "Błąd!",
+                                    text: "Wystąpił problem podczas usuwania pojazdu.",
+                                    icon: "error",
+                                    confirmButtonText: "OK"
+                                });
+                                console.error(xhr.responseText);
+                            }
+                        });
+                    }
+                });
+            });
+
+        });
+    </script>
+{% endblock %}
+
